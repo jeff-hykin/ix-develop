@@ -41,14 +41,14 @@
         _core.derivation {
             system = system;
             name = "ix-develop";
-            version = "0.0.1";
+            version = "0.0.2";
             builder = "${bash}/bin/bash";
             src = _src;
             args = [
                 "-c"
                 ''
                     export PATH="$PATH:"${denoEscaped}"/bin/:"${unzipEscaped}"/bin:"${coreutilsEscaped}"/bin"
-                    source_target="$out/source/ix-develop/${"0.0.1"}"
+                    source_target="$out/source/ix-develop/${"0.0.2"}"
                     mkdir -p "$source_target"
                     mkdir -p "$out/bin"
                     mkdir -p "$out/tmp"
