@@ -45,7 +45,7 @@ if (showHelp) {
                 --no-cache
                     Hopefully this will never be needed
                 --temp-dir
-                    Defaults to /tmp
+                    Defaults to .ix.ignore
         `.replace(/\n            /g, "\n")))
     Deno.exit(0)
 }
@@ -57,7 +57,7 @@ const parsedArgs = parseArgs({
     rawArgs: Deno.args,
     fields: [
         [["--no-cache",], flag,],
-        [["--temp-dir",], initialValue(`/tmp`),],
+        [["--temp-dir",], initialValue(`.ix.ignore`),],
         // [[1, "--deno-version"], initialValue(`${Deno.version.deno}`), ],
         // [["--no-default-args"], flag, ],
         // [["--add-arg"], initialValue([]), ],
