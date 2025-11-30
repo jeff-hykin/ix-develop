@@ -1,0 +1,93 @@
+{
+    # local install command:
+    #     nix-env -i -f ./  
+    # or
+    #     nix profile install ./
+    _core ? builtins,
+    system ? _core.currentSystem,
+    _pkgs ? (_core.import 
+        (_core.fetchTarball
+            ({
+                url="https://github.com/NixOS/nixpkgs/archive/REPLACEME_NIXPKGS_HASH_9409841.tar.gz";
+                sha256="REPLACEME_NIXPKGS_SHA256_9409841";
+            })
+        )
+        ({
+            system = system;
+            overlays = [
+            ]; 
+        })
+    ),
+    _src ? ./build_helper,
+    deno ? _pkgs.deno,
+    bash ? _pkgs.bash,
+    coreutils ? _pkgs.coreutils,
+    unzip ? _pkgs.unzip,
+    escapeShellArg ? _pkgs.lib.escapeShellArg,
+}:
+    let
+        gotDeno2 = (builtins.compareVersions "2" deno.version) == -1;
+        denoEscaped = escapeShellArg (if gotDeno2 then _pkgs.deno else deno);
+        unzipEscaped = escapeShellArg unzip;
+        coreutilsEscaped = escapeShellArg coreutils;
+    in 
+        _core.derivation {
+            system = system;
+            name = "ix-develop";
+            version = REPLACEME_VERSION_9409841;
+            builder = "${bash}/bin/bash";
+            src = _src;
+            args = [
+                "-c"
+                ''
+                    export PATH="$PATH:"${denoEscaped}"/bin/:"${unzipEscaped}"/bin:"${coreutilsEscaped}"/bin"
+                    source_target="$out/source/ix-develop/${REPLACEME_VERSION_9409841}"
+                    mkdir -p "$source_target"
+                    mkdir -p "$out/bin"
+                    mkdir -p "$out/tmp"
+                    # copy over source code
+                    cp "$src/main.bundle.js" "$source_target"
+                    ls -la "$out/"
+                    echo "$source_target:"
+                    ls -la "$source_target"
+                    echo "$out/bin:"
+                    ls -la "$out/bin"
+                    
+                    # setup for isolating deno
+                    export HOME="$src/home"
+                    export TMP="$out/tmp"
+                    export DENO_DIR="$out/tmp"
+                    export DENO_NO_UPDATE_CHECK="true"
+                    export DENO_INSTALL_ROOT="$out/bin/"
+                    export DENO_NO_PACKAGE_JSON="true"
+                    
+                    # compile as a means of caching any dependencies
+                    # note1: there shouldn't be any (its bundled)
+                    # note2: deno has better ways to cache, but this works across deno 1.x and 2.x
+                    ${denoEscaped}/bin/deno compile --no-lock --allow-all --output "$out/tmp" "$src/main.bundle.js"
+                    
+                    # create the helper executer for deno
+                    echo ${escapeShellArg ''#!/bin/sh
+                        TMP="''${VAR:="/tmp"}" \
+                        DENO_DIR="$out/tmp" \
+                        DENO_NO_UPDATE_CHECK="true" \
+                        DENO_INSTALL_ROOT="$out/bin/" \
+                        DENO_NO_PACKAGE_JSON="true" \
+                        exec ${escapeShellArg denoEscaped}/bin/deno run --no-lock --no-check --cached-only -Aq -- ''}"$source_target"'/main.bundle.js "$@"' > "$out/bin/ix-develop"
+                    # note: $out is not being properly escaped above, but we know that it is safe (will never contain $'s or other weird characters)
+                    
+                    chmod +x "$out/bin/ix-develop"
+                    
+                    # cleanup
+                    rm -rf "$out/tmp"
+                    rm -rf "$out/home"
+                    rm -rf "$out/err.log"
+                    
+                    ls -la "$out/"
+                    echo "$out/source:"
+                    ls -la "$out/source"
+                    echo "$out/bin:"
+                    ls -la "$out/bin"
+                ''
+            ];
+        }
