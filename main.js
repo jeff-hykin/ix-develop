@@ -164,8 +164,7 @@ const filesToSymlink = (await FileSystem.listFilePathsIn(
             const out = path.endsWith(`/.git`) || path == `.git` || path == `${parentPath}/flake.lock` || FileSystem.makeAbsolutePath(tempDir) == FileSystem.makeAbsolutePath(path)
             if (out) {
                 console.debug(`out is:`,path)
-            }
-            if (path.includes(".ix.ignore")) {
+            } else if (path.includes(".ix.ignore")) {
                 console.debug(`out x is:`,path)
                 console.debug(`FileSystem.makeAbsolutePath(tempDir) is:`,FileSystem.makeAbsolutePath(tempDir))
                 console.debug(`FileSystem.makeAbsolutePath(path) is:`,FileSystem.makeAbsolutePath(path))
