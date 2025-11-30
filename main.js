@@ -204,5 +204,5 @@ await $$`git add -A -f && git commit -m "-"`.cwd(cachePath).text("combined")
     // add option to fill data into the flake.nix
     // add an option to sidestep the init of the bash / shell that is started by nix develop by creating a shim
 
-const { code } = await $`nix develop ${parsedArgs.argsAfterStopper}`.cwd(cachePath)
+const { code } = await $`nix develop --impure ${parsedArgs.argsAfterStopper}`.cwd(cachePath)
 Deno.exit(code)
