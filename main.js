@@ -111,8 +111,6 @@ await FileSystem.ensureIsFolder(cachePath)
 // so that dev shells can find the real project
 Deno.env.set(`IX_DEVELOP_TARGET_PATH`, parentPath)
 
-await $$`echo $IX_DEVELOP_TARGET_PATH`
-
 // 
 // create git repo
 // 
