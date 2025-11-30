@@ -1,0 +1,1 @@
+../../../../../run/build_for_nix.ps1

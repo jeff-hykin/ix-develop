@@ -6,6 +6,7 @@ import { version } from './tools/version.js'
 import { compile } from "https://esm.sh/gitignore-parser@0.0.2"
 import { Console, cyan, green, magenta, yellow } from "https://deno.land/x/quickr@0.8.12/main/console.js"
 import $ from "https://esm.sh/@jsr/david__dax@0.43.2/mod.ts"
+import { generateKeys, encrypt, decrypt, hashers } from "https://esm.sh/gh/jeff-hykin/good-js@1.18.2.0/source/encryption.js"
 const $$ = (...args)=>$(...args).noThrow()
 
 // FIXME: use the better gitignore parser (npm/ignore)
@@ -99,7 +100,7 @@ let flakeignorePromise = FileSystem.read(`${parentPath}/.flakeignore`)
 // somewhere to put the real git repo
 // 
 // console.log(`checking for cache folder`)
-const cachePath = `${tempDir}/${parentPath.replace(/^\/Users\//,"")}`
+const cachePath = `${tempDir}/${(await hashers.sha256(parentPath)).slice(0,36)}`
 if (noCache) {
     await FileSystem.remove(cachePath)
 }
@@ -161,7 +162,7 @@ const filesToSymlink = (await FileSystem.listFilePathsIn(
         dontReturnSymlinks: false,
         shouldntInclude: (path)=>{
             // console.debug(`each path is:`,path)
-            return path.endsWith(`/.git`) || path == `.git` || path == `${parentPath}/flake.lock` || path == ".ix.ignore"
+            return path.endsWith(`/.git`) || path == `.git` || path == `${parentPath}/flake.lock` || FileSystem.makeAbsolutePath(tempDir) == FileSystem.makeAbsolutePath(path)
         },
         shouldntExplore: (path)=>{
             // console.debug(`path is:`,path)
