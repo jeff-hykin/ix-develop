@@ -1,5 +1,7 @@
 ## What is this?
 
+A tool for fixing some issues with `nix develop`, like having [git lfs files being copied over and over to the nix store](https://discourse.nixos.org/t/is-it-possible-to-make-a-flake-that-has-no-source-tree/16037/6).
+
 ## How to install
 
 Make sure you have nix installed:
@@ -18,3 +20,9 @@ nix profile install 'https://github.com/jeff-hykin/ix-develop/archive/REPLACEME_
 
 ## How to use
 
+Use as a mostly drop-in replacement for `nix develop`:
+
+```sh
+ix-develop 
+ix-develop --help
+```

@@ -97,7 +97,8 @@ let flakeignorePromise = FileSystem.read(`${parentPath}/.flakeignore`)
 // somewhere to put the real git repo
 // 
 // console.log(`checking for cache folder`)
-const cachePath = `${tempDir}/${parentPath}`
+const cachePath = `${tempDir}/${parentPath.replace(/^\/Users\//,"")}`
+console.debug(`cachePath is:`,cachePath)
 if (noCache) {
     await FileSystem.remove(cachePath)
 }
@@ -133,7 +134,7 @@ let ignoreTool = compile("")
 if (typeof (await flakeignorePromise) == "string") {
     ignoreTool = compile(await flakeignorePromise)
     // copy over the .flakeignore
-    fileCopyPromises.push(FileSystem.absoluteLink({
+    fileCopyPromises.push(FileSystem.relativeLink({
         existingItem: `${parentPath}/.flakeignore`,
         newItem: `${cachePath}/.flakeignore`,
         force: true,
@@ -179,7 +180,7 @@ await Promise.all(fileCopyPromises.concat(filesToSymlink.map(
         if (FileSystem.basename(each) == ".gitignore") {
             return FileSystem.copy({ from: `${parentPath}/${each}`, to: `${cachePath}/${each}`, overwrite: true, })
         } else {
-            return FileSystem.absoluteLink({
+            return FileSystem.relativeLink({
                 existingItem: `${parentPath}/${each}`,
                 newItem: `${cachePath}/${each}`,
                 force: true,
@@ -201,5 +202,5 @@ await $$`git add -A -f && git commit -m "-"`.cwd(cachePath)
     // add option to fill data into the flake.nix
     // add an option to sidestep the init of the bash / shell that is started by nix develop by creating a shim
 
-const { code } = await $`nix develop --impure ${parsedArgs.argsAfterStopper}`.cwd(cachePath)
+const { code } = await $`nix develop ${parsedArgs.argsAfterStopper}`.cwd(cachePath)
 Deno.exit(code)
