@@ -23,6 +23,26 @@ nix profile install 'https://github.com/jeff-hykin/ix-develop/archive/REPLACEME_
 Use as a mostly drop-in replacement for `nix develop`:
 
 ```sh
-ix-develop 
+ix-develop
 ix-develop --help
+ix-develop --temp-dir .flake 
+ix-develop --no-cache --temp-dir .flake
+
+# nix develop passthrough:
+ix-develop -- --version # == nix develop --version
+ix-develop -- --pure
+ix-develop -- --help
+```
+
+For quality of life you probably want to add the following to your devShell:
+
+```nix
+mkShell {
+    shellHook = ''
+        # when being run by ix-develop, cd into the real project
+        if [ -d "$IX_DEVELOP_TARGET_PATH" ]; then
+            cd "$IX_DEVELOP_TARGET_PATH"
+        fi
+    '';
+}
 ```

@@ -27,75 +27,75 @@
                         ix-develop = package;
                         default = package;
                     };
-                    # devShells = xome.simpleMakeHomeFor {
-                    #     inherit pkgs;
-                    #     pure = true;
-                    #     homeModule = {
-                    #         # for home-manager examples, see: 
-                    #         # https://deepwiki.com/nix-community/home-manager/5-configuration-examples
-                    #         # all home-manager options: 
-                    #         # https://nix-community.github.io/home-manager/options.xhtml
-                    #         home.homeDirectory = "/tmp/virtual_homes/nix_version_search_cli";
-                    #         home.stateVersion = "25.05";
-                    #         home.packages = [
-                    #             # vital stuff
-                    #             # pkgs.nix
-                    #             pkgs.coreutils-full
+                    devShells = xome.simpleMakeHomeFor {
+                        inherit pkgs;
+                        pure = true;
+                        homeModule = {
+                            # for home-manager examples, see: 
+                            # https://deepwiki.com/nix-community/home-manager/5-configuration-examples
+                            # all home-manager options: 
+                            # https://nix-community.github.io/home-manager/options.xhtml
+                            home.homeDirectory = "/tmp/virtual_homes/nix_version_search_cli";
+                            home.stateVersion = "25.05";
+                            home.packages = [
+                                # vital stuff
+                                # pkgs.nix
+                                pkgs.coreutils-full
                                 
-                    #             # optional stuff
-                    #             pkgs.gnugrep
-                    #             pkgs.findutils
-                    #             pkgs.wget
-                    #             pkgs.curl
-                    #             pkgs.unixtools.locale
-                    #             pkgs.unixtools.more
-                    #             pkgs.unixtools.ps
-                    #             pkgs.unixtools.getopt
-                    #             pkgs.unixtools.ifconfig
-                    #             pkgs.unixtools.hostname
-                    #             pkgs.unixtools.ping
-                    #             pkgs.unixtools.hexdump
-                    #             pkgs.unixtools.killall
-                    #             pkgs.unixtools.mount
-                    #             pkgs.unixtools.sysctl
-                    #             pkgs.unixtools.top
-                    #             pkgs.unixtools.umount
-                    #             pkgs.git
-                    #             pkgs.htop
-                    #             pkgs.ripgrep
-                    #             # project specific stuff
-                    #             pkgs.patchelf
-                    #             # nvs
-                    #         ];
+                                # optional stuff
+                                pkgs.gnugrep
+                                pkgs.findutils
+                                pkgs.wget
+                                pkgs.curl
+                                pkgs.unixtools.locale
+                                pkgs.unixtools.more
+                                pkgs.unixtools.ps
+                                pkgs.unixtools.getopt
+                                pkgs.unixtools.ifconfig
+                                pkgs.unixtools.hostname
+                                pkgs.unixtools.ping
+                                pkgs.unixtools.hexdump
+                                pkgs.unixtools.killall
+                                pkgs.unixtools.mount
+                                pkgs.unixtools.sysctl
+                                pkgs.unixtools.top
+                                pkgs.unixtools.umount
+                                pkgs.git
+                                pkgs.htop
+                                pkgs.ripgrep
+                                # project specific stuff
+                                pkgs.patchelf
+                                # nvs
+                            ];
                             
-                    #         programs = {
-                    #             home-manager = {
-                    #                 enable = true;
-                    #             };
-                    #             zsh = {
-                    #                 enable = true;
-                    #                 enableCompletion = true;
-                    #                 autosuggestion.enable = true;
-                    #                 syntaxHighlighting.enable = true;
-                    #                 shellAliases.ll = "ls -la";
-                    #                 history.size = 100000;
-                    #                 # this is kinda like .zshrc
-                    #                 initContent = ''
-                    #                     # when being run by ix-develop, cd into the real project
-                    #                     if [ -d "$IX_DEVELOP_TARGET_PATH" ]; then
-                    #                         cd "$IX_DEVELOP_TARGET_PATH"
-                    #                     fi
-                    #                     # this enables some impure stuff like sudo, comment it out to get FULL purity
-                    #                     export PATH="$PATH:/usr/bin/"
-                    #                 '';
-                    #             };
-                    #             starship = {
-                    #                 enable = true;
-                    #                 enableZshIntegration = true;
-                    #             };
-                    #         };
-                    #     }; 
-                    # };
+                            programs = {
+                                home-manager = {
+                                    enable = true;
+                                };
+                                zsh = {
+                                    enable = true;
+                                    enableCompletion = true;
+                                    autosuggestion.enable = true;
+                                    syntaxHighlighting.enable = true;
+                                    shellAliases.ll = "ls -la";
+                                    history.size = 100000;
+                                    # this is kinda like .zshrc
+                                    initContent = ''
+                                        # when being run by ix-develop, cd into the real project
+                                        if [ -d "$IX_DEVELOP_TARGET_PATH" ]; then
+                                            cd "$IX_DEVELOP_TARGET_PATH"
+                                        fi
+                                        # this enables some impure stuff like sudo, comment it out to get FULL purity
+                                        export PATH="$PATH:/usr/bin/"
+                                    '';
+                                };
+                                starship = {
+                                    enable = true;
+                                    enableZshIntegration = true;
+                                };
+                            };
+                        }; 
+                    };
                 }
         );
 }
