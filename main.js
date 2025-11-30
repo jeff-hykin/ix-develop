@@ -115,9 +115,8 @@ Deno.env.set(`IX_DEVELOP_TARGET_PATH`, parentPath)
 // create git repo
 // 
 let gitInitProcess = Promise.resolve({ code: 0 })
-FileSystem.pwd = cachePath
 if (!FileSystem.exists(`${cachePath}/.git`)) {
-    gitInitProcess = $`git init`.spawn()
+    gitInitProcess = $`git init`.cwd(cachePath).spawn()
 }
 
 
@@ -162,20 +161,11 @@ const filesToSymlink = (await FileSystem.listFilePathsIn(
         dontReturnSymlinks: false,
         shouldntInclude: (path)=>{
             const out = path.endsWith(`/.git`) || path == `.git` || path == `${parentPath}/flake.lock` || tempDir == path || FileSystem.makeAbsolutePath(tempDir) == FileSystem.makeAbsolutePath(path)
-            if (out) {
-                console.debug(`out is:`,path)
-            } else if (path.includes(".ix.ignore")) {
-                console.debug(`out x is:`,path)
-                console.debug(`FileSystem.makeAbsolutePath(tempDir) is:`,FileSystem.makeAbsolutePath(tempDir))
-                console.debug(`FileSystem.makeAbsolutePath(path) is:`,FileSystem.makeAbsolutePath(path))
-                console.debug(`(tempDir) is:`,(tempDir))
-                console.debug(`(path) is:`,(path))
-            }
             // console.debug(`each path is:`,path)
             return out
         },
         shouldntExplore: (path)=>{
-            // console.debug(`path is:`,path)
+            // console.debug(`explor path is:`,path)
             return [FileSystem.makeAbsolutePath(`${parentPath}/.git`), FileSystem.makeAbsolutePath(tempDir)].includes(FileSystem.makeAbsolutePath(path))
         },
     }
