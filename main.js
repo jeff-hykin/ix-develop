@@ -174,7 +174,7 @@ const filesToSymlink = (await FileSystem.listFilePathsIn(
         },
         shouldntExplore: (path)=>{
             // console.debug(`path is:`,path)
-            return FileSystem.makeAbsolutePath(path) == FileSystem.makeAbsolutePath(`${parentPath}/.git`)
+            return [FileSystem.makeAbsolutePath(`${parentPath}/.git`), FileSystem.makeAbsolutePath(tempDir)].includes(FileSystem.makeAbsolutePath(path))
         },
     }
 )).map(
