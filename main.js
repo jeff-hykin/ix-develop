@@ -167,6 +167,8 @@ const filesToSymlink = (await FileSystem.listFilePathsIn(
             }
             if (path.includes(".ix.ignore")) {
                 console.debug(`out x is:`,path)
+                console.debug(`FileSystem.makeAbsolutePath(tempDir) is:`,FileSystem.makeAbsolutePath(tempDir))
+                console.debug(`FileSystem.makeAbsolutePath(path) is:`,FileSystem.makeAbsolutePath(path))
             }
             // console.debug(`each path is:`,path)
             return out
