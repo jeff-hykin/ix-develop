@@ -161,7 +161,7 @@ const filesToSymlink = (await FileSystem.listFilePathsIn(
         dontFollowSymlinks: true,
         dontReturnSymlinks: false,
         shouldntInclude: (path)=>{
-            const out = path.endsWith(`/.git`) || path == `.git` || path == `${parentPath}/flake.lock` || path == tempDir
+            const out = path.endsWith(`/.git`) || path == `.git` || path == `${parentPath}/flake.lock` || FileSystem.makeAbsolutePath(tempDir) == FileSystem.makeAbsolutePath(path)
             if (out) {
                 console.debug(`out is:`,path)
             } else if (path.includes(".ix.ignore")) {
