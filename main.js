@@ -8,6 +8,8 @@ import { Console, cyan, green, magenta, yellow } from "https://deno.land/x/quick
 import $ from "https://esm.sh/@jsr/david__dax@0.43.2/mod.ts"
 const $$ = (...args)=>$(...args).noThrow()
 
+// FIXME: use the better gitignore parser (npm/ignore)
+
 // 
 // check for help/version
 // 
@@ -98,7 +100,6 @@ let flakeignorePromise = FileSystem.read(`${parentPath}/.flakeignore`)
 // 
 // console.log(`checking for cache folder`)
 const cachePath = `${tempDir}/${parentPath.replace(/^\/Users\//,"")}`
-console.debug(`cachePath is:`,cachePath)
 if (noCache) {
     await FileSystem.remove(cachePath)
 }
@@ -160,7 +161,7 @@ const filesToSymlink = (await FileSystem.listFilePathsIn(
         dontReturnSymlinks: false,
         shouldntInclude: (path)=>{
             // console.debug(`each path is:`,path)
-            return path.endsWith(`/.git`) || path == `.git` || path == `${parentPath}/flake.lock`
+            return path.endsWith(`/.git`) || path == `.git` || path == `${parentPath}/flake.lock` || path == ".ix.ignore"
         },
         shouldntExplore: (path)=>{
             // console.debug(`path is:`,path)
@@ -194,7 +195,7 @@ await Promise.all(fileCopyPromises.concat(filesToSymlink.map(
 await gitInitProcess
 
 // stage even the stuff that was normally gitignored
-await $$`git add -A -f && git commit -m "-"`.cwd(cachePath)
+await $$`git add -A -f && git commit -m "-"`.cwd(cachePath).text("combined")
 
 
 // in the future
