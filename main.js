@@ -165,6 +165,9 @@ const filesToSymlink = (await FileSystem.listFilePathsIn(
             if (out) {
                 console.debug(`out is:`,path)
             }
+            if (path.includes(".ix.ignore")) {
+                console.debug(`out x is:`,path)
+            }
             // console.debug(`each path is:`,path)
             return out
         },
