@@ -161,13 +161,15 @@ const filesToSymlink = (await FileSystem.listFilePathsIn(
         dontFollowSymlinks: true,
         dontReturnSymlinks: false,
         shouldntInclude: (path)=>{
-            const out = path.endsWith(`/.git`) || path == `.git` || path == `${parentPath}/flake.lock` || FileSystem.makeAbsolutePath(tempDir) == FileSystem.makeAbsolutePath(path)
+            const out = path.endsWith(`/.git`) || path == `.git` || path == `${parentPath}/flake.lock` || tempDir == path || FileSystem.makeAbsolutePath(tempDir) == FileSystem.makeAbsolutePath(path)
             if (out) {
                 console.debug(`out is:`,path)
             } else if (path.includes(".ix.ignore")) {
                 console.debug(`out x is:`,path)
                 console.debug(`FileSystem.makeAbsolutePath(tempDir) is:`,FileSystem.makeAbsolutePath(tempDir))
                 console.debug(`FileSystem.makeAbsolutePath(path) is:`,FileSystem.makeAbsolutePath(path))
+                console.debug(`(tempDir) is:`,(tempDir))
+                console.debug(`(path) is:`,(path))
             }
             // console.debug(`each path is:`,path)
             return out
