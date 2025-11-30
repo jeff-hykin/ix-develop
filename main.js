@@ -89,7 +89,7 @@ const {
 } = parsedArgs.simplifiedNames
 
 // console.log(`looking for flake.nix`)
-const parentPath = await FileSystem.walkUpUntil("flake.nix")
+const parentPath = FileSystem.makeAbsolutePath(await FileSystem.walkUpUntil("flake.nix"))
 if (!parentPath) {
     throw Error(`I couldn't find a flake.nix file in this directory or any of its parents`)
 }
